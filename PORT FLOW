@@ -1,0 +1,26 @@
+The hint given to us is "Match the protocol with the correct port number and get your flag."
+After downloading the zip file, I extracted it and there was the game file, my best guess that it was developped by pygame.
+the solution :
+NTP     ---- Port : 123 
+FTP     ---- Port : 21
+NetBus  ---- Port : 12345
+SSH     ---- Port : 22
+SMTP    ---- Port : 25
+HTTP    ---- Port : 80
+TFTP    ---- Port : 69
+NCAT    ---- Port : 31337
+LDAP    ---- Port : 389
+HTTPS   ---- Port : 443
+IMAP    ---- Port : 993
+MySql   ---- Port : 3306
+
+And bingo! we get the flag : N7{A@c2!}
+
+
+
+
+
+
+
+
+
