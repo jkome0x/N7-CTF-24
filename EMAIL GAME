@@ -1,0 +1,13 @@
+This game is a 50 pt challenge, All you have to do is to identify the phishing email (phishing is a Social Engineering attack, I appreciate the fact that this ctf competition had this category, cuz we do not see it a lot in other ctf competitions) and 
+the red flags (0/6) to get the flag .
+the game is built based on pygame :
+the red flags that made me think the second email is the phishing one are :
+
+1 : The subject : Urgent response required! ( this is not a professional way of emails from institutions)
+2 : The sender's email, for instance : they don't have the edu domaine ! 
+3 : The "Dear Winner," , it is obvious that this is a phishing email !
+4 : The link they are trying to make you click on ! that is suspecious !
+5 : They are asking for the bank account information too ! 
+6 : In the end, they mention the team, and the sender's email too, since it is not an edu domain, it is suspecious !
+
+Bingo ! the flag is : N7{$3vZ!}
