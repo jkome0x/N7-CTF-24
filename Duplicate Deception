@@ -1,0 +1,16 @@
+Write-up : Duplicate Deception || Cryptography Challenge (100 pts)
+
+Hint : In this challenge, you need to upload two different files that share a hidden characteristic — maybe a hash :) Your task is to find or create these files so they both pass the system’s check. Once you succeed, the flag will be revealed. Can you uncover the trick and submit the correct pair?
+After downloading the provided challenge.txt file, it contained the following address: 89.168.44.106:5001. Visiting the link led to a page where we were required to upload two files.
+
+Based on the hint mentioning "hash," I suspected the challenge involved an MD5 collision, where two distinct files generate the same hash. To solve this, I searched for tools that could create two such files and found this helpful MD5 collision generator:
+MD5 Collision Generator : https://www.mathstat.dal.ca/~selinger/md5collision/ .
+
+Using the tool, I downloaded the following files:
+
+    hello.exe with an MD5 sum of cdc47d670159eef60916ca03a9d4a007
+    erase.exe with the same MD5 sum of cdc47d670159eef60916ca03a9d4a007
+
+I uploaded both files to the challenge page, and voilà — success! The system accepted the files and displayed the flag:
+
+Flag: N7{d0j08v7l1mtishu1egix3pekxsi3yphl}
