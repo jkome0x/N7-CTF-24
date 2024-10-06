@@ -1,3 +1,5 @@
+Write-Up: Email game Challenge (50 pts)
+
 This game is a 50 pt challenge, All you have to do is to identify the phishing email (phishing is a Social Engineering attack, I appreciate the fact that this ctf competition had this category, cuz we do not see it a lot in other ctf competitions) and 
 the red flags (0/6) to get the flag .
 the game is built based on pygame :
