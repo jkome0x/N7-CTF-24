@@ -1,0 +1,64 @@
+Write-Up: Audio Steganography Challenge (100 pts)
+
+Hint: The flag is hidden inside the audio, try to find it.
+
+I’m not that familiar with audio file steganography and often rely on tools like Audacity or Sonic Visualizer. However, for this challenge, those tools weren’t useful since the hidden data was embedded using Least Significant Bit (LSB) steganography.
+
+LSB steganography is a technique where the least significant bits of each sample in the audio file are used to store information without noticeably altering the sound quality. In this challenge, the flag was hidden within the LSBs of the audio data, so I had to extract it programmatically.
+
+To solve this, I wrote a Python script that reads the audio file's frames and retrieves the hidden data by analyzing the least significant bits of each byte. I used Python’s wave library to interact with the .wav file.
+
+Here’s the script I used:
+__________________________________________________________________________________________
+python
+
+import wave
+
+def extract_lsb_from_audio(audio_path):
+    # Open the audio file
+    audio = wave.open(audio_path, mode='rb')
+    
+    # Read frames and convert to byte array
+    frame_bytes = bytearray(list(audio.readframes(audio.getnframes())))
+    
+    # Extract the LSB from each byte
+    extracted_bits = ''.join([str(frame_bytes[i] & 1) for i in range(len(frame_bytes))])
+    
+    # Split the binary string into chunks of 8 bits (1 byte)
+    binary_chars = [extracted_bits[i:i+8] for i in range(0, len(extracted_bits), 8)]
+    
+    # Convert binary strings to characters
+    message = ""
+    for byte in binary_chars:
+        char = chr(int(byte, 2))
+        # Stop if we reach a null character (assuming message ends with a null)
+        if char == "\x00":
+            break
+        message += char
+    
+    # Close the audio file
+    audio.close()
+    
+    return message
+
+# Use the function to extract the hidden message
+audio_path = "flag.wav"
+hidden_message = extract_lsb_from_audio(audio_path)
+print("Extracted message:", hidden_message)
+
+Explanation of the Script:
+
+    The script reads the audio file (flag.wav) using the wave library.
+    It extracts the least significant bit (LSB) from each byte of the audio's frame data.
+    These bits are combined to form a binary string, split into chunks of 8 bits (1 byte).
+    The binary chunks are then converted into characters to reconstruct the hidden message.
+    The script stops reading when it encounters a null character (\x00), assuming this marks the end of the hidden message.
+
+I placed the audio file flag.wav in the same directory as the script and ran it. The output was:
+_________________________________________________________________________________
+
+bash
+
+Extracted message: N7{r*SS#+}
+
+Bingo! That’s our flag!
